@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import traceback
 import os
 
-# Optional S3 fetch
+# Optional S3 fetch (kept for flexibility)
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError
 
@@ -22,15 +22,27 @@ FEATURE_ORDER = [
     "is_2025",
 ]
 
-def ensure_models_local_via_s3():
-    """If MODEL_S3_BUCKET + MODEL_S3_PREFIX are set, download artifacts to ./models"""
+# ---------- helpers: local-first, with optional S3 fallback ----------
+def all_artifacts_present_root() -> bool:
+    """Check artifacts at repo root (same dir as app.py)."""
+    needed = [
+        "bus_speed_predictor.pkl",
+        "speed_scaler.pkl",
+        "violation_predictor.pkl",
+        "model_registry.json",
+        "preprocessing_params.json",
+    ]
+    return all(os.path.exists(n) for n in needed)
+
+def ensure_models_local_via_s3_to_root():
+    """If S3 env vars are set and local files are missing, download to repo root."""
     bucket = os.getenv("MODEL_S3_BUCKET")
     prefix = os.getenv("MODEL_S3_PREFIX")
     region = os.getenv("AWS_REGION", "us-east-1")
     if not bucket or not prefix:
         print("No MODEL_S3_BUCKET/MODEL_S3_PREFIX set; skipping S3 download.")
         return
-    os.makedirs("models", exist_ok=True)
+
     files = [
         "bus_speed_predictor.pkl",
         "speed_scaler.pkl",
@@ -39,8 +51,17 @@ def ensure_models_local_via_s3():
         "preprocessing_params.json",
     ]
     s3 = boto3.client("s3", region_name=region)
+
+    # Optional: quick visibility
+    try:
+        resp = s3.list_objects_v2(Bucket=bucket, Prefix=prefix)
+        sample = [o["Key"] for o in resp.get("Contents", [])][:10] if resp.get("Contents") else []
+        print("DEBUG S3 list (sample):", sample)
+    except Exception as e:
+        print("DEBUG S3 list failed:", e)
+
     for fname in files:
-        local = f"models/{fname}"
+        local = fname  # download into repo root
         if os.path.exists(local):
             continue
         key = f"{prefix.rstrip('/')}/{fname}"
@@ -57,18 +78,16 @@ def load_json(path, default=None):
     except Exception:
         return default
 
-def file_exists(path):
-    try:
-        return os.path.exists(path)
-    except Exception:
-        return False
-
+# ---------- Flask app ----------
 app = Flask(__name__, template_folder="templates", static_folder=None)
 CORS(app)
 
-# --- Startup: download models (if configured), then load them
+# Startup: local-first, then optional S3
 print("Boot: ensuring artifacts present …")
-ensure_models_local_via_s3()
+if not all_artifacts_present_root():
+    ensure_models_local_via_s3_to_root()
+else:
+    print("Found all artifacts locally at repo root; skipping S3.")
 
 print("Loading models …")
 speed_model = None
@@ -83,15 +102,21 @@ model_registry = {
 }
 
 try:
-    if file_exists("models/bus_speed_predictor.pkl"):
-        speed_model = joblib.load("models/bus_speed_predictor.pkl")
-    if file_exists("models/speed_scaler.pkl"):
-        speed_scaler = joblib.load("models/speed_scaler.pkl")
-    if file_exists("models/violation_predictor.pkl"):
-        violation_model = joblib.load("models/violation_predictor.pkl")
-    preprocessing_params = load_json("models/preprocessing_params.json", default={"cuny_routes": []})
-    model_registry = load_json("models/model_registry.json", default=model_registry)
+    if os.path.exists("bus_speed_predictor.pkl"):
+        speed_model = joblib.load("bus_speed_predictor.pkl")
+    if os.path.exists("speed_scaler.pkl"):
+        speed_scaler = joblib.load("speed_scaler.pkl")
+    if os.path.exists("violation_predictor.pkl"):
+        violation_model = joblib.load("violation_predictor.pkl")
+    preprocessing_params = load_json("preprocessing_params.json", default={"cuny_routes": []})
+    model_registry = load_json("model_registry.json", default=model_registry)
     print("✅ Models loaded successfully!")
+    print("Loaded flags:", {
+        "speed_model": speed_model is not None,
+        "speed_scaler": speed_scaler is not None,
+        "violation_model": violation_model is not None,
+        "has_params": bool(preprocessing_params),
+    })
 except Exception as e:
     print("⚠️ Warning: one or more artifacts failed to load:", e)
 
