@@ -8,68 +8,10 @@ from datetime import datetime, timedelta
 import traceback
 import os
 
-# Optional S3 fetch (kept for flexibility)
-import boto3
-from botocore.exceptions import BotoCoreError, ClientError
-
 FEATURE_ORDER = [
-    "month",
-    "hour_of_day",
-    "is_weekend",
-    "is_rush_hour",
-    "road_distance",
-    "distance_to_nearest_cuny",
-    "is_2025",
+    "month", "hour_of_day", "is_weekend", "is_rush_hour",
+    "road_distance", "distance_to_nearest_cuny", "is_2025",
 ]
-
-# ---------- helpers: local-first, with optional S3 fallback ----------
-def all_artifacts_present_root() -> bool:
-    """Check artifacts at repo root (same dir as app.py)."""
-    needed = [
-        "bus_speed_predictor.pkl",
-        "speed_scaler.pkl",
-        "violation_predictor.pkl",
-        "model_registry.json",
-        "preprocessing_params.json",
-    ]
-    return all(os.path.exists(n) for n in needed)
-
-def ensure_models_local_via_s3_to_root():
-    """If S3 env vars are set and local files are missing, download to repo root."""
-    bucket = os.getenv("MODEL_S3_BUCKET")
-    prefix = os.getenv("MODEL_S3_PREFIX")
-    region = os.getenv("AWS_REGION", "us-east-1")
-    if not bucket or not prefix:
-        print("No MODEL_S3_BUCKET/MODEL_S3_PREFIX set; skipping S3 download.")
-        return
-
-    files = [
-        "bus_speed_predictor.pkl",
-        "speed_scaler.pkl",
-        "violation_predictor.pkl",
-        "model_registry.json",
-        "preprocessing_params.json",
-    ]
-    s3 = boto3.client("s3", region_name=region)
-
-    # Optional: quick visibility
-    try:
-        resp = s3.list_objects_v2(Bucket=bucket, Prefix=prefix)
-        sample = [o["Key"] for o in resp.get("Contents", [])][:10] if resp.get("Contents") else []
-        print("DEBUG S3 list (sample):", sample)
-    except Exception as e:
-        print("DEBUG S3 list failed:", e)
-
-    for fname in files:
-        local = fname  # download into repo root
-        if os.path.exists(local):
-            continue
-        key = f"{prefix.rstrip('/')}/{fname}"
-        try:
-            print(f"Downloading s3://{bucket}/{key} -> {local}")
-            s3.download_file(bucket, key, local)
-        except (BotoCoreError, ClientError) as e:
-            print(f"⚠️ Failed to download {fname} from S3:", e)
 
 def load_json(path, default=None):
     try:
@@ -78,18 +20,14 @@ def load_json(path, default=None):
     except Exception:
         return default
 
-# ---------- Flask app ----------
 app = Flask(__name__, template_folder="templates", static_folder=None)
 CORS(app)
 
-# Startup: local-first, then optional S3
-print("Boot: ensuring artifacts present …")
-if not all_artifacts_present_root():
-    ensure_models_local_via_s3_to_root()
-else:
-    print("Found all artifacts locally at repo root; skipping S3.")
+# ---------- Load artifacts from repo root ----------
+print("Boot: loading artifacts from repo root …")
+print("DEBUG CWD:", os.getcwd())
+print("DEBUG root listing:", sorted(os.listdir(".")))
 
-print("Loading models …")
 speed_model = None
 speed_scaler = None
 violation_model = None
@@ -108,8 +46,10 @@ try:
         speed_scaler = joblib.load("speed_scaler.pkl")
     if os.path.exists("violation_predictor.pkl"):
         violation_model = joblib.load("violation_predictor.pkl")
+
     preprocessing_params = load_json("preprocessing_params.json", default={"cuny_routes": []})
     model_registry = load_json("model_registry.json", default=model_registry)
+
     print("✅ Models loaded successfully!")
     print("Loaded flags:", {
         "speed_model": speed_model is not None,
@@ -120,6 +60,7 @@ try:
 except Exception as e:
     print("⚠️ Warning: one or more artifacts failed to load:", e)
 
+# ---------- Routes ----------
 @app.route("/")
 def home():
     return jsonify({
@@ -308,5 +249,4 @@ def get_models_info():
     return jsonify(model_registry)
 
 if __name__ == "__main__":
-    # Render uses gunicorn via Dockerfile CMD, but keep this for local dev
     app.run(debug=True, host="0.0.0.0", port=5000)
