@@ -1,0 +1,72 @@
+{
+  "version": "1.0.0",
+  "created_at": "2025-09-22T04:41:53.388263",
+  "models": {
+    "speed_predictor": {
+      "name": "bus_speed_predictor",
+      "type": "LightGBM Regressor",
+      "features": [
+        "day_of_week",
+        "month",
+        "day_of_month",
+        "is_weekend",
+        "violations_lag_1",
+        "violations_lag_7",
+        "violations_lag_14"
+      ],
+      "target": "average_road_speed",
+      "performance": {
+        "mae": 37.809785584337014,
+        "r2_score": 0.8133086290588984
+      },
+      "feature_importance": [
+        {
+          "feature": "road_distance",
+          "importance": 2306
+        },
+        {
+          "feature": "distance_to_nearest_cuny",
+          "importance": 2267
+        },
+        {
+          "feature": "hour_of_day",
+          "importance": 1032
+        },
+        {
+          "feature": "is_weekend",
+          "importance": 220
+        },
+        {
+          "feature": "month",
+          "importance": 105
+        },
+        {
+          "feature": "is_2025",
+          "importance": 56
+        },
+        {
+          "feature": "is_rush_hour",
+          "importance": 14
+        }
+      ]
+    },
+    "violation_predictor": {
+      "name": "violation_predictor",
+      "type": "Random Forest Regressor",
+      "features": [
+        "day_of_week",
+        "month",
+        "day_of_month",
+        "is_weekend",
+        "violations_lag_1",
+        "violations_lag_7",
+        "violations_lag_14"
+      ],
+      "target": "violation_count",
+      "performance": {
+        "mae": 37.809785584337014,
+        "mape": 0.571205357916062
+      }
+    }
+  }
+}

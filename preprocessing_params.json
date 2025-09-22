@@ -1,0 +1,328 @@
+{
+  "cuny_routes": [
+    "B67",
+    "M4",
+    "BX1",
+    "M104",
+    "Q96",
+    "B61",
+    "Q69",
+    "QM15",
+    "M42",
+    "QM6",
+    "BM1",
+    "Q41",
+    "X28",
+    "QM63",
+    "Q111",
+    "BXM9",
+    "Q83",
+    "B54",
+    "B25",
+    "Q66",
+    "Q85",
+    "Q6",
+    "SIM24",
+    "B43",
+    "BX33",
+    "Q4",
+    "B49",
+    "Q108",
+    "SIM3C",
+    "QM2",
+    "M72",
+    "B57",
+    "B32",
+    "B52",
+    "M12",
+    "QM17",
+    "SIM22",
+    "B93",
+    "M101",
+    "B62",
+    "SIM9",
+    "SIM33",
+    "M55",
+    "Q39",
+    "B38",
+    "S93",
+    "BXM8",
+    "BX26",
+    "Q93",
+    "Q31",
+    "BX25",
+    "BXM11",
+    "M34A+",
+    "M66",
+    "BXM3",
+    "BXM18",
+    "B98",
+    "X38",
+    "Q112",
+    "M98",
+    "QM1",
+    "S62",
+    "Q44+",
+    "BX34",
+    "B11",
+    "Q113",
+    "B65",
+    "Q27",
+    "Q32",
+    "BM3",
+    "SIM10",
+    "QM16",
+    "B6",
+    "QM21",
+    "BXM10",
+    "BX42",
+    "M5",
+    "M125",
+    "QM18",
+    "M3",
+    "B1",
+    "M50",
+    "M11",
+    "M34+",
+    "BXM7",
+    "BM5",
+    "B41",
+    "QM68",
+    "Q110",
+    "M2",
+    "Q92",
+    "SIM25",
+    "SIM33C",
+    "Q84",
+    "BX22",
+    "QM64",
+    "BX32",
+    "BXM2",
+    "Q42",
+    "SIM26",
+    "BX10",
+    "Q100",
+    "X68",
+    "QM3",
+    "QM20",
+    "X63",
+    "M102",
+    "QM5",
+    "Q20B",
+    "Q60",
+    "Q30",
+    "Q75",
+    "BM4",
+    "Q95",
+    "Q102",
+    "Q63",
+    "B96",
+    "BX3",
+    "B48",
+    "Q115",
+    "S92",
+    "SIM30",
+    "Q24",
+    "M22",
+    "SIM31",
+    "Q101",
+    "Q9",
+    "Q114",
+    "SIM1C",
+    "SIM7",
+    "Q20A",
+    "Q17",
+    "Q5",
+    "Q94",
+    "X64",
+    "M57",
+    "Q67",
+    "M20",
+    "Q89",
+    "QM4",
+    "M103",
+    "B94",
+    "B103",
+    "X27",
+    "B69",
+    "M1",
+    "Q86",
+    "BX40",
+    "Q20",
+    "SIM8",
+    "SIM3",
+    "BXM6",
+    "SIM23",
+    "M31",
+    "Q107",
+    "BX13",
+    "M10",
+    "BXM4",
+    "BM2",
+    "M15",
+    "B26",
+    "X37",
+    "Q74",
+    "SIM8X",
+    "Q87",
+    "SIM4C",
+    "M7",
+    "Q8"
+  ],
+  "cbd_bounds": {
+    "south": 40.7,
+    "north": 40.774,
+    "west": -74.02,
+    "east": -73.935
+  },
+  "cuny_campuses": [
+    {
+      "campus": "Borough of Manhattan Community College",
+      "latitude": 40.717367,
+      "longitude": -74.012178
+    },
+    {
+      "campus": "Bronx Community College",
+      "latitude": 40.856673,
+      "longitude": -73.910127
+    },
+    {
+      "campus": "Hostos Community College",
+      "latitude": 40.817828,
+      "longitude": -73.926862
+    },
+    {
+      "campus": "Kingsborough Community College",
+      "latitude": 40.578349,
+      "longitude": -73.934465
+    },
+    {
+      "campus": "LaGuardia Community College",
+      "latitude": 40.743951,
+      "longitude": -73.935154
+    },
+    {
+      "campus": "Queensborough Community College",
+      "latitude": 40.75615,
+      "longitude": -73.75755
+    },
+    {
+      "campus": "Guttman Community College",
+      "latitude": 40.752846,
+      "longitude": -73.984133
+    },
+    {
+      "campus": "Medgar Evers College",
+      "latitude": 40.66624,
+      "longitude": -73.957349
+    },
+    {
+      "campus": "New York City College of Technology",
+      "latitude": 40.695507,
+      "longitude": -73.987882
+    },
+    {
+      "campus": "College of Staten Island",
+      "latitude": 40.608648,
+      "longitude": -74.153563
+    },
+    {
+      "campus": "School of Labor and Urban Studies",
+      "latitude": 40.75541,
+      "longitude": -73.98184
+    },
+    {
+      "campus": "School of Law",
+      "latitude": 40.747639,
+      "longitude": -73.943676
+    },
+    {
+      "campus": "The Graduate School and University Center",
+      "latitude": 40.748724,
+      "longitude": -73.984205
+    },
+    {
+      "campus": "School of Professional Studies",
+      "latitude": 40.748151,
+      "longitude": -73.989723
+    },
+    {
+      "campus": "School of Public Health",
+      "latitude": 40.80771,
+      "longitude": -73.9442
+    },
+    {
+      "campus": "School of Journalism",
+      "latitude": 40.755343,
+      "longitude": -73.988846
+    },
+    {
+      "campus": "Macaulay Honors College",
+      "latitude": 40.77384,
+      "longitude": -73.9802
+    },
+    {
+      "campus": "Baruch College",
+      "latitude": 40.740977,
+      "longitude": -73.984252
+    },
+    {
+      "campus": "Brooklyn College",
+      "latitude": 40.630276,
+      "longitude": -73.955545
+    },
+    {
+      "campus": "The City College of New York",
+      "latitude": 40.819548,
+      "longitude": -73.949518
+    },
+    {
+      "campus": "School of Medicine",
+      "latitude": 40.819548,
+      "longitude": -73.949518
+    },
+    {
+      "campus": "Hunter College",
+      "latitude": 40.768731,
+      "longitude": -73.964915
+    },
+    {
+      "campus": "John Jay College of Criminal Justice",
+      "latitude": 40.769939,
+      "longitude": -73.986469
+    },
+    {
+      "campus": "Lehman College",
+      "latitude": 40.873442,
+      "longitude": -73.889361
+    },
+    {
+      "campus": "Queens College",
+      "latitude": 40.736316,
+      "longitude": -73.820035
+    },
+    {
+      "campus": "York College",
+      "latitude": 40.702821,
+      "longitude": -73.795776
+    }
+  ],
+  "feature_ranges": {
+    "month": [
+      1,
+      12
+    ],
+    "hour_of_day": [
+      0,
+      23
+    ],
+    "road_distance": [
+      0.117,
+      6.133
+    ],
+    "distance_to_nearest_cuny": [
+      0,
+      5
+    ]
+  }
+}
